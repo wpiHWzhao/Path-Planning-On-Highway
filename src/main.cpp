@@ -7,6 +7,7 @@
 #include "Eigen-3.3/Eigen/QR"
 #include "helpers.h"
 #include "json.hpp"
+#include "PathPlanner.h"
 
 // for convenience
 using nlohmann::json;
@@ -90,6 +91,23 @@ int main() {
 
           json msgJson;
 
+          PathPlanner pathPlanner; /// Path planner object
+          CarInfo carInfo; /// Car information object
+          MapInfo mapInfo; /// Map information object
+
+          carInfo.carX = car_x;
+          carInfo.carY = car_y;
+          carInfo.carS = car_s;
+          carInfo.carD = car_d;
+          carInfo.carSpeed = car_speed;
+          carInfo.carYaw = car_yaw;
+
+          mapInfo.mapWayPointsX = map_waypoints_x;
+          mapInfo.mapWayPointsY = map_waypoints_y;
+          mapInfo.mapWayPointsS = map_waypoints_s;
+          mapInfo.mapWayPoints_dx = map_waypoints_dx;
+          mapInfo.mapWayPoints_dy = map_waypoints_dy;
+
           vector<double> next_x_vals;
           vector<double> next_y_vals;
 
@@ -98,6 +116,8 @@ int main() {
            *   sequentially every .02 seconds
            */
 
+          next_x_vals = pathPlanner.trajectoryGen(carInfo, mapInfo)[0];
+          next_y_vals = pathPlanner.trajectoryGen(carInfo, mapInfo)[1];
 
           msgJson["next_x"] = next_x_vals;
           msgJson["next_y"] = next_y_vals;
