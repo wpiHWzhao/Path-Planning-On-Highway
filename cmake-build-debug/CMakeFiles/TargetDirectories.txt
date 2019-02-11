@@ -1,3 +1,0 @@
-/home/haowei/SDworkspace/CarND-Path-Planning-Project/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/haowei/SDworkspace/CarND-Path-Planning-Project/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/haowei/SDworkspace/CarND-Path-Planning-Project/cmake-build-debug/CMakeFiles/path_planning.dir
