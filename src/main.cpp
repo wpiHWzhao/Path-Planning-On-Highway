@@ -86,7 +86,6 @@ int main() {
           // Previous path data given to the Planner
           vector<double > previous_path_x = j[1]["previous_path_x"]; /// Change type from auto to vector
           vector<double > previous_path_y = j[1]["previous_path_y"]; /// Change type from auto to vector
-          // std::cout<< typeid(previous_path_x[1]).name()<<std::endl;
           // Previous path's end s and d values 
           double end_path_s = j[1]["end_path_s"];
           double end_path_d = j[1]["end_path_d"];
@@ -116,24 +115,14 @@ int main() {
           mapInfo.mapWayPoints_dx = map_waypoints_dx;
           mapInfo.mapWayPoints_dy = map_waypoints_dy;
 
-          vector<double> next_x_vals;
-          vector<double> next_y_vals;
+          vector<double> next_x_vals; // Next x coordinates of the points that the car should follow
+          vector<double> next_y_vals; // Next y coordinates of the points that the car should follow
 
+          pathPlanner.behaviorPlanner(sensor_fusion,previous_path_x,carInfo); // Call behaviour planner
 
-
-
-          /**
-           * TODO: define a path made up of (x,y) points that the car will visit
-           *   sequentially every .02 seconds
-           */
-
-
-          pathPlanner.behaviorPlanner(sensor_fusion,previous_path_x,carInfo);
-
+          // Call path planner
           next_x_vals = pathPlanner.trajectoryGen(carInfo, mapInfo,previous_path_x,previous_path_y)[0];
           next_y_vals = pathPlanner.trajectoryGen(carInfo, mapInfo,previous_path_x,previous_path_y)[1];
-          // std::cout<<"x is "<<next_x_vals[0]<<std::endl;
-          // std::cout<<"y is "<<next_y_vals[0]<<std::endl;
 
           msgJson["next_x"] = next_x_vals;
           msgJson["next_y"] = next_y_vals;
