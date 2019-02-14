@@ -125,7 +125,7 @@ vector<vector<double >> PathPlanner::trajectoryGen(const CarInfo &carInfo, const
 
 void PathPlanner::behaviorPlanner(const vector<vector<double >> &sensorFusion, const vector<double> &previousPathX,
         const CarInfo &carInfo ) {
-    bool safe = true;
+    // bool safe = true;
     bool leftLane = true;
     bool rightLane = true;
     bool intentChangeLane = false;
@@ -140,15 +140,23 @@ void PathPlanner::behaviorPlanner(const vector<vector<double >> &sensorFusion, c
         double vy = sensorFusion[i][4];
         double speed = sqrt(vx*vx+vy*vy);
         double s = sensorFusion[i][5];
-        bool thisLeftFlag= false;
-        bool thisRightFlag = false;
+        bool thisLeftFlag = true;
+        bool thisRightFlag = true;
+
 
 
         double sNear = s+ previousPathX.size()*0.02*speed;
-        if (d<(2+4*(lane-1)+2) && d>(2+4*(lane-1)-2) && fabs(sNear-carInfo.carS)>5 && d >0){
-            thisLeftFlag= true;
-        } else if (d<(2+4*(lane+1)+2) && d>(2+4*(lane+1)-2) && fabs(sNear-carInfo.carS)>5 && d<12){
-            thisRightFlag = true;
+        if (d<12 && d>0) {
+            // std:: cout << "this is a car"<<std:: endl;
+            // std:: cout << "d is "<< d<< std::endl;
+            // std:: cout << "dist is "<< fabs(sNear - carInfo.carS)<<std::endl;
+            if (d < (2 + 4 * (lane - 1) + 2) && d > (2 + 4 * (lane - 1) - 2) && fabs(sNear - carInfo.carS) < 15 ) {///15
+                thisLeftFlag = false;
+                // std::cout<< "left is clear" << std::endl;
+            } else if (d < (2 + 4 * (lane + 1) + 2) && d > (2 + 4 * (lane + 1) - 2) && fabs(sNear - carInfo.carS) < 15) {
+                thisRightFlag = false;
+                // std::cout<< "right is clear" << std:: endl;
+            }
         }
 
         if (d<(2+4*lane+2) && d>(2+4*lane-2)){
@@ -165,18 +173,38 @@ void PathPlanner::behaviorPlanner(const vector<vector<double >> &sensorFusion, c
 
     }
 
-    std::cout << "left lane"<< leftLane<<std::endl;
-    std::cout << "right lane"<< rightLane << std:: endl;
+    //std::cout << "left lane"<< leftLane<<std::endl;
+    //std::cout << "right lane"<< rightLane << std:: endl;
+    //std::cout<< "intent to change lane" << intentChangeLane<<std::endl;
 
-    if(leftLane  && intentChangeLane){
-        lane -=1;
-    } else if (rightLane && intentChangeLane){
-        lane +=1;
-    } else if (!leftLane && !rightLane && intentChangeLane){
-        targetSpeed -= 0.224*3;
-    } else if (targetSpeed<=49.5){
-        targetSpeed += 0.224;
+    if (lane == 1) {
+        if (leftLane && intentChangeLane) {
+            lane -= 1;
+        } else if (rightLane && intentChangeLane) {
+            lane += 1;
+        } else if (!leftLane && !rightLane && intentChangeLane) {
+            targetSpeed -= 0.224 * 3; /// 2
+        } else if (targetSpeed <= 49.5) {
+            targetSpeed += 0.224*3;
+        }
+    } else if (lane==0){
+        if (rightLane && intentChangeLane) {
+            lane += 1;
+        } else if ( !rightLane && intentChangeLane) {
+            targetSpeed -= 0.224 * 3;
+        } else if (targetSpeed <= 49.5) {
+            targetSpeed += 0.224*3;
+        }
+    } else if (lane == 2){
+        if (leftLane && intentChangeLane) {
+            lane -= 1;
+        } else if (!leftLane && intentChangeLane) {
+            targetSpeed -= 0.224 * 3;
+        } else if (targetSpeed <= 49.5) {
+            targetSpeed += 0.224 * 3;
+        }
     }
+
 
 //    bool changeLane = safe && intentChangeLane;
 //
