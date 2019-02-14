@@ -51,8 +51,13 @@ int main() {
     map_waypoints_dy.push_back(d_y);
   }
 
+
+  PathPlanner pathPlanner; /// Path planner object
+  CarInfo carInfo; /// Car information object
+  MapInfo mapInfo; /// Map information object
+
   h.onMessage([&map_waypoints_x,&map_waypoints_y,&map_waypoints_s,
-               &map_waypoints_dx,&map_waypoints_dy]
+               &map_waypoints_dx,&map_waypoints_dy, &pathPlanner, &carInfo, &mapInfo]
               (uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
@@ -79,25 +84,28 @@ int main() {
           double car_speed = j[1]["speed"];
 
           // Previous path data given to the Planner
-          auto previous_path_x = j[1]["previous_path_x"];
-          auto previous_path_y = j[1]["previous_path_y"];
+          vector<double > previous_path_x = j[1]["previous_path_x"]; /// Change type from auto to vector
+          vector<double > previous_path_y = j[1]["previous_path_y"]; /// Change type from auto to vector
+          // std::cout<< typeid(previous_path_x[1]).name()<<std::endl;
           // Previous path's end s and d values 
           double end_path_s = j[1]["end_path_s"];
           double end_path_d = j[1]["end_path_d"];
 
           // Sensor Fusion Data, a list of all other cars on the same side 
           //   of the road.
-          auto sensor_fusion = j[1]["sensor_fusion"];
+          vector<vector<double >> sensor_fusion = j[1]["sensor_fusion"]; /// Change type from auto to vector<vector>
 
           json msgJson;
 
-          PathPlanner pathPlanner; /// Path planner object
-          CarInfo carInfo; /// Car information object
-          MapInfo mapInfo; /// Map information object
+          if(previous_path_x.size()>0){
+            carInfo.carS = end_path_s;
+          } else{
+            carInfo.carS = car_s;
+          }
 
+          // carInfo.carS = car_s;
           carInfo.carX = car_x;
           carInfo.carY = car_y;
-          carInfo.carS = car_s;
           carInfo.carD = car_d;
           carInfo.carSpeed = car_speed;
           carInfo.carYaw = car_yaw;
@@ -111,13 +119,21 @@ int main() {
           vector<double> next_x_vals;
           vector<double> next_y_vals;
 
+
+
+
           /**
            * TODO: define a path made up of (x,y) points that the car will visit
            *   sequentially every .02 seconds
            */
 
-          next_x_vals = pathPlanner.trajectoryGen(carInfo, mapInfo)[0];
-          next_y_vals = pathPlanner.trajectoryGen(carInfo, mapInfo)[1];
+
+          pathPlanner.behaviorPlanner(sensor_fusion,previous_path_x,carInfo);
+
+          next_x_vals = pathPlanner.trajectoryGen(carInfo, mapInfo,previous_path_x,previous_path_y)[0];
+          next_y_vals = pathPlanner.trajectoryGen(carInfo, mapInfo,previous_path_x,previous_path_y)[1];
+          // std::cout<<"x is "<<next_x_vals[0]<<std::endl;
+          // std::cout<<"y is "<<next_y_vals[0]<<std::endl;
 
           msgJson["next_x"] = next_x_vals;
           msgJson["next_y"] = next_y_vals;
