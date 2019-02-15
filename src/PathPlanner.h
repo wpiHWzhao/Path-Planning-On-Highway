@@ -1,5 +1,5 @@
 //
-// Created by haowei on 2/10/19.
+// Created by Haowei Zhao on 2/10/19.
 //
 
 #ifndef PATH_PLANNING_PATHPLANNER_H
@@ -24,9 +24,8 @@ public:
     vector<vector<double >> trajectoryGen (const CarInfo &, const MapInfo &,
             const vector<double > &, const vector<double> &);
 
+    // Behavior generator. Would change speed and lane based on environment information
     void behaviorPlanner(const vector<vector<double >> &, const vector<double > &, const CarInfo & );
-
-    void calculateCost(vector<double > &);
 
 private:
     double targetSpeed = 0;

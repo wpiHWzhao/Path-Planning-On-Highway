@@ -84,15 +84,15 @@ int main() {
           double car_speed = j[1]["speed"];
 
           // Previous path data given to the Planner
-          vector<double > previous_path_x = j[1]["previous_path_x"]; /// Change type from auto to vector
-          vector<double > previous_path_y = j[1]["previous_path_y"]; /// Change type from auto to vector
+          vector<double > previous_path_x = j[1]["previous_path_x"];
+          vector<double > previous_path_y = j[1]["previous_path_y"];
           // Previous path's end s and d values 
           double end_path_s = j[1]["end_path_s"];
           double end_path_d = j[1]["end_path_d"];
 
           // Sensor Fusion Data, a list of all other cars on the same side 
           //   of the road.
-          vector<vector<double >> sensor_fusion = j[1]["sensor_fusion"]; /// Change type from auto to vector<vector>
+          vector<vector<double >> sensor_fusion = j[1]["sensor_fusion"];
 
           json msgJson;
 
@@ -120,7 +120,7 @@ int main() {
 
           pathPlanner.behaviorPlanner(sensor_fusion,previous_path_x,carInfo); // Call behaviour planner
 
-          // Call path planner
+          // Generate trajectory based on planned behavior
           next_x_vals = pathPlanner.trajectoryGen(carInfo, mapInfo,previous_path_x,previous_path_y)[0];
           next_y_vals = pathPlanner.trajectoryGen(carInfo, mapInfo,previous_path_x,previous_path_y)[1];
 
