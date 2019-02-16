@@ -363,25 +363,25 @@ void PathPlanner::behaviorPlanner(const vector<vector<double >> &sensorFusion, c
         } else if (rightLane && intentChangeLane) {
             lane += 1;
         } else if (!leftLane && !rightLane && intentChangeLane) { // If all ways are blocked, then we slow down
-            targetSpeed -= 0.224 * 3;
+            targetSpeed -= 0.224;
         } else if (targetSpeed <= 49.5) { // If there is no cars blocking our way, speed up
-            targetSpeed += 0.224*3;
+            targetSpeed += 0.224;
         }
     } else if (lane==0){
         if (rightLane && intentChangeLane) {
             lane += 1;
         } else if ( !rightLane && intentChangeLane) {
-            targetSpeed -= 0.224 * 3;
+            targetSpeed -= 0.224;
         } else if (targetSpeed <= 49.5) {
-            targetSpeed += 0.224*3;
+            targetSpeed += 0.224;
         }
     } else if (lane == 2){
         if (leftLane && intentChangeLane) {
             lane -= 1;
         } else if (!leftLane && intentChangeLane) {
-            targetSpeed -= 0.224 * 3;
+            targetSpeed -= 0.224;
         } else if (targetSpeed <= 49.5) {
-            targetSpeed += 0.224 * 3;
+            targetSpeed += 0.224;
         }
     }
 
