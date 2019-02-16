@@ -147,7 +147,7 @@ void PathPlanner::behaviorPlanner(const vector<vector<double >> &sensorFusion, c
      * --Gentle driver would change lane only when it is necessary, e.g. when there is a car in front of it and
      * it is safe to do so. It also prefers left lane over right lane.
      * */
-
+/*
     //-------------------------------------------------------------------------------------------
     /// Aggressive Driver below
 
@@ -282,7 +282,9 @@ void PathPlanner::behaviorPlanner(const vector<vector<double >> &sensorFusion, c
                 case 0:{
                     if(leftLane && middleLane && targetSpeed<45){
                         lane =0;
-                        targetSpeed +=0.224*3;
+                        targetSpeed += 0.224*3;
+                    } else if(leftLane && !middleLane && targetSpeed<45){
+                        targetSpeed += 0.224*3;
                     } else{
                         targetSpeed -=0.224*3;
                     }
@@ -309,11 +311,11 @@ void PathPlanner::behaviorPlanner(const vector<vector<double >> &sensorFusion, c
         }
             break;
     }
-
+*/
     //------------------------------------------------------------------------------------------------------
 
     /// Gentle Driver below
-/*
+
     // The flag of the current lane on the left, true if this lane is not blocked.
     // NOTE: This is not the left lane on the map.
     bool leftLane = true;
@@ -382,6 +384,6 @@ void PathPlanner::behaviorPlanner(const vector<vector<double >> &sensorFusion, c
             targetSpeed += 0.224 * 3;
         }
     }
-*/
+
 
 }
